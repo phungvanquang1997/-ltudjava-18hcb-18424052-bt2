@@ -183,6 +183,7 @@ public class Run {
 		
 		Employee e = new Employee("quang","quang",123);
 		session.beginTransaction();
+		session.save(e);
 		Query query = session.createQuery("from Employee");
 		List<Employee> list = query.list();
         System.out.println(list.get(0).getFirstName());
