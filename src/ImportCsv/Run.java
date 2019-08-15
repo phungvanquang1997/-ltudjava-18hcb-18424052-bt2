@@ -182,7 +182,7 @@ public class Run {
 		
 		Grade g = new Grade("18HCB");
 		session.beginTransaction();
-		//session.save(g);
+		session.save(g);
 		Query query = session.createQuery("from User");
 		List<User> list = query.list();
         System.out.println(list.get(0).userName);

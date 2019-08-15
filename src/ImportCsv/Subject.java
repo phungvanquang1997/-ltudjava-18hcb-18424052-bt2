@@ -2,10 +2,11 @@ package ImportCsv;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Embeddable
+@Entity
 @Table(name="Subject")
 public class Subject {
 	
@@ -15,9 +16,11 @@ public class Subject {
 	
 	@Column(name="name")
 	public String subjectName;
-	public Room room;
 	
-	public Subject(String subjectId, String subjectName, Room room) {
+	@Column(name="room")
+	public String room;
+	
+	public Subject(String subjectId, String subjectName, String room) {
 		this.subjectId = subjectId;
 		this.subjectName = subjectName;
 		this.room = room;

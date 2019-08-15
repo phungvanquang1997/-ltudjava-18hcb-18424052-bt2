@@ -25,8 +25,6 @@ public class Student {
 	@Column(name="CMND")
 	public String CMND;
 	
-	public Point point;
-	
 	public Student() {
 		
 	}
@@ -61,14 +59,6 @@ public class Student {
 
 	public void setCMND(String cMND) {
 		CMND = cMND;
-	}
-
-	public Point getPoint() {
-		return point;
-	}
-
-	public void setPoint(Point point) {
-		this.point = point;
 	}
 
 	public void setName(String name) {
