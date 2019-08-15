@@ -12,85 +12,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="GRADE")
 public class Grade {
-	private HashMap<String, ArrayList<Student>> classes;
 	
-	private ArrayList<Student> students;
+	@Id
+	@Column(name="id")
+	private int classId;
 	
-	private String classId;
-	
+	@Column(name="name")
 	private String className;
 	
 	public Grade()
 	{
-		this.classes = new HashMap();
-		this.students = new ArrayList<Student>();
+
 	}
 	
-	public void createClass(String className, ArrayList<Student> students)
+	public Grade(String className)
 	{
 		this.className = className;
-		this.students = students;
-		this.classes.put(className, students);
 	}
 	
-	public ArrayList getStudentsInClass()
-	{
-		return this.students;
-	}
 	
 	public String getClassName()
 	{
 		return this.className;
 	}
 	
-	public void showStudentList()
-	{
-		System.out.println("Danh sách sinh viên");
-		try {
-			for(Student student: this.students)
-			{
-				System.out.println(student.name + "-" + student.MSSV + "-" + student.gender + "-" + student.CMND);
-			}
-		} catch(Exception e) {
-			System.out.println("Không tồn tại sinh viên");
-		}
-	}
-	
-	public void showStudentListByClassName(String className)
-	{
-		ArrayList<Student> students = this.classes.get(className);
-		System.out.println("Danh sách lớp " + className);
-		try {
-	    	for(Student student: students) {
-				System.out.println(student.name + "-" + student.MSSV + "-" + student.gender + "-" + student.CMND);
-	    	}
-		} catch(Exception e)
-		{
-			System.out.println("Không có sinh viên trong lớp này");
-		}
-	}
-	
-	public void addStudent(Student newStudent)
-	{
-		this.students.add(newStudent);
-	}
-	
-	public void addStudent(Student newStudent, String optionClass)
-	{
-		ArrayList<Student> temp = this.classes.get(optionClass);
-		this.addStudent(newStudent);
-		if(temp != null) {
-			temp.add(newStudent);
-			this.classes.remove(optionClass);
-			this.classes.put(optionClass, temp);
-		}
-		else {
-			ArrayList<Student> newStudentList = new ArrayList<Student>();
-			newStudentList.add(newStudent);
-			this.classes.put(optionClass, newStudentList);
-		}
-	}
 	
 	public void writeFiles() throws IOException
 	{

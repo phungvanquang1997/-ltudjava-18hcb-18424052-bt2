@@ -22,7 +22,10 @@
       
    </property>
    <property name="hibernate.current_session_context_class">thread</property>
-
-   <mapping class="ImportCsv.Employee"></mapping>
+   <mapping class="ImportCsv.Grade"></mapping>
+   <mapping class="ImportCsv.Point"></mapping>
+   <mapping class="ImportCsv.Student"></mapping>
+   <mapping class="ImportCsv.User"></mapping>
+   <mapping class="ImportCsv.Subject"></mapping>
 </session-factory>
 </hibernate-configuration>

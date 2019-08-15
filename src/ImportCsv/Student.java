@@ -1,10 +1,30 @@
 package ImportCsv;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="Student")
 public class Student {
+	@Id
+	@Column(name="id")
+	public int id;
+	
+	@Column(name="name")
 	public String name;
+	
+	@Column(name="MSSV")
 	public String MSSV;
+	
+	@Column(name="gender")
 	public String gender;
+	
+	@Column(name="CMND")
 	public String CMND;
+	
 	public Point point;
 	
 	public Student() {

@@ -177,16 +177,15 @@ public class Run {
 	public static void main(String[] args)  {
 		@SuppressWarnings("deprecation")
 		SessionFactory ss = new Configuration().configure("hibernate.cfg.xml")
-		.addAnnotatedClass(Employee.class)
 		.buildSessionFactory();
 		Session session = ss.getCurrentSession();
 		
-		Employee e = new Employee("quang","quang",123);
+		Grade g = new Grade("18HCB");
 		session.beginTransaction();
-		session.save(e);
-		Query query = session.createQuery("from Employee");
-		List<Employee> list = query.list();
-        System.out.println(list.get(0).getFirstName());
+		//session.save(g);
+		Query query = session.createQuery("from User");
+		List<User> list = query.list();
+        System.out.println(list.get(0).userName);
 		session.getTransaction().commit();
 		//menu();
 	}

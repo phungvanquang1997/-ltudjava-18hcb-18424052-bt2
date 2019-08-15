@@ -9,22 +9,36 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="User")
 public class User {
+	
+	@Id
+	@Column(name="id")
+	public int id;
+	
+	@Column(name="username")
 	public String userName;
+	
+	@Column(name="password")
 	public String passWord;
-	RoleManagement Role;
+	
+	@Column(name="role")
+	public int Role;
+	
 	public static ArrayList<User> userList = new ArrayList<User>();
 	static int isChangedPassword = 0;
 	
-	public User(String newUserName, String newPassWord) {
+	public User() {}
+	public User(String newUserName, String newPassWord, int Role) {
 		this.userName = newUserName;
 		this.passWord = newPassWord;
-		
-		if(userName.equals("giaovu")) {
-			this.Role = new RoleManagement(1, "giaovu");
-		} else {
-			this.Role = new RoleManagement(0, "students");
-		}
 	}
 	
 	public String getUserName() {

@@ -1,11 +1,26 @@
 package ImportCsv;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="Point")
 public class Point {
 	
+	@Id
+	@Column(name="id")
+	public int id;
+	
+	@Column(name="middle")
 	public float middlePoint;
 	
+	@Column(name="final")
 	public float finalPoint;
 	
+	@Column(name="other")
 	public float otherPoint;
 	
 	public float getMiddlePoint() {
