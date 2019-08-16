@@ -175,8 +175,13 @@ public class Run {
 	}
 	
 	public static void main(String[] args)  {
-		Grade g = new Grade();
-		g.findStudentsInClasses("18HCB");
+		ImportStudents imp = new ImportStudents();
+		try {
+			imp.process();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//menu();
 	}
 

@@ -9,7 +9,7 @@ public class SessionUtil {
 		@SuppressWarnings("deprecation")
 		SessionFactory ss = new Configuration().configure("hibernate.cfg.xml")
 		.buildSessionFactory();
-		Session session = ss.getCurrentSession();
+		Session session = ss.openSession();
 		return session;
 	}
 }

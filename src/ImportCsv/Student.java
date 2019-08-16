@@ -9,6 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="Student")
 public class Student {
+	
 	@Id
 	@Column(name="id")
 	public int id;
@@ -32,12 +33,13 @@ public class Student {
 		
 	}
 	
-	public Student(String name, String MSSV, String gender, String CMND)
+	public Student(String name, String MSSV, String gender, String CMND, String gradeId)
 	{
 		this.CMND = CMND;
 		this.gender = gender;
 		this.MSSV = MSSV;
 		this.name = name;
+		this.gradeId = gradeId;
 	}
 	
 	public String getMSSV() {

@@ -13,6 +13,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import org.hibernate.Session;
+
 public class ImportStudents {
 	private ArrayList studentList;
 	
@@ -20,9 +22,10 @@ public class ImportStudents {
 	
 	private Grade classes;
 	
-	public ImportStudents(Grade classes)
+	private String className;
+	
+	public ImportStudents()
 	{
-		this.classes = classes;
 		this.studentList = new ArrayList();
 	}
 	
@@ -32,7 +35,8 @@ public class ImportStudents {
 	            listFilesForFolder(fileEntry);
 	        } else {
 	            this.readFiles(fileEntry.getAbsolutePath());
-	            this.classes.createClass(fileEntry.getName().split("\\.")[0], this.studentList);	        
+	            this.className = fileEntry.getName().split("\\.")[0];
+	            //this.classes.createClass(fileEntry.getName().split("\\.")[0], this.studentList);	        
 	            fileEntry.delete();
 	        }
 	    }
@@ -50,6 +54,8 @@ public class ImportStudents {
         String line = "";
         String cvsSplitBy = ",";
         ArrayList<String> studentList = new ArrayList<String>();
+        Session session = SessionUtil.session();
+        session.beginTransaction();
         try {
 
             br = new BufferedReader(new InputStreamReader(
@@ -61,9 +67,10 @@ public class ImportStudents {
                 String name = data[1];
                 String MSSV = data[2];
                 String gender = data[3];
-                String CMND = data[4];
-                this.studentInformation = new Student(name,MSSV,gender,CMND);
-                this.studentList.add(this.studentInformation);
+                String CMND = data[4];        
+                Student student = new Student(name, MSSV, gender, CMND, this.className);
+                session.save(student);
+                session.getTransaction().commit();
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -78,6 +85,7 @@ public class ImportStudents {
                 }
             }
         }
+        session.getTransaction().rollback();
 	}
 	
 	public void process() throws IOException 

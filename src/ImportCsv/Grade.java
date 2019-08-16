@@ -52,10 +52,10 @@ public class Grade {
 	public List findStudentsInClasses(String className)
 	{
 		Session session = SessionUtil.session();
-		String hql = "FROM Grade g , Student s WHERE s.gradeId = g.classId and g.className = '18HCB'";
+		String hql = "FROM Grade g , Student s WHERE s.gradeId = g.classId and g.className = :name";
 		session.beginTransaction();
 		Query query = session.createQuery(hql);
-		//query.setParameter("name", "18HCB");
+		query.setParameter("name", "18HCB");
 		List l = query.list();
 		Object[] row = (Object[]) l.get(0);
 		Student g = (Student)row[1];
