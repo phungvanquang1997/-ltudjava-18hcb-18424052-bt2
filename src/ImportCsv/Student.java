@@ -25,6 +25,9 @@ public class Student {
 	@Column(name="CMND")
 	public String CMND;
 	
+	@Column(name="gradeId")
+	public String gradeId;
+	
 	public Student() {
 		
 	}
@@ -63,14 +66,6 @@ public class Student {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Student(String name, String mSSV, String gender, String cMND, Point point) {
-		this.name = name;
-		this.MSSV = mSSV;
-		this.gender = gender;
-		this.CMND = cMND;
-		this.point = point;
 	}
 
 	public String getName() 

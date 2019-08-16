@@ -10,12 +10,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 @Entity
 @Table(name="GRADE")
@@ -44,6 +48,21 @@ public class Grade {
 		return this.className;
 	}
 	
+	
+	public List findStudentsInClasses(String className)
+	{
+		Session session = SessionUtil.session();
+		String hql = "FROM Grade g , Student s WHERE s.gradeId = g.classId and g.className = '18HCB'";
+		session.beginTransaction();
+		Query query = session.createQuery(hql);
+		//query.setParameter("name", "18HCB");
+		List l = query.list();
+		Object[] row = (Object[]) l.get(0);
+		Student g = (Student)row[1];
+		System.out.println(g.CMND);
+		session.getTransaction().commit();
+		return l;
+	}
 	
 	public void writeFiles() throws IOException
 	{

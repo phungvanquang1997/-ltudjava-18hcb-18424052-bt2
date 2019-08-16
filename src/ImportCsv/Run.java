@@ -175,18 +175,8 @@ public class Run {
 	}
 	
 	public static void main(String[] args)  {
-		@SuppressWarnings("deprecation")
-		SessionFactory ss = new Configuration().configure("hibernate.cfg.xml")
-		.buildSessionFactory();
-		Session session = ss.getCurrentSession();
-		
-		Grade g = new Grade("18HCB");
-		session.beginTransaction();
-		session.save(g);
-		Query query = session.createQuery("from User");
-		List<User> list = query.list();
-        System.out.println(list.get(0).userName);
-		session.getTransaction().commit();
+		Grade g = new Grade();
+		g.findStudentsInClasses("18HCB");
 		//menu();
 	}
 
