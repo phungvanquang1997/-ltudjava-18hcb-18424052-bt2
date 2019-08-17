@@ -69,7 +69,9 @@ public class ImportStudents {
 	                String gender = data[3];
 	                String CMND = data[4];        
 	                Student student = new Student(name, MSSV, gender, CMND, this.className);
-	                session.save(student);              	                 
+	                session.save(student);              	   
+	                Grade grade = new Grade(this.className);
+	                session.save(grade);
 	            }
 	            session.getTransaction().commit();     
         	} catch (Exception e) {

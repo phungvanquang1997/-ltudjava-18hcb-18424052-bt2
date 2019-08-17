@@ -8,17 +8,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.hibernate.Session;
+
 public class ImportSubjects {
-	private ArrayList<Subject> subjectList;
+	private String className;
 	
-	private Subject subjectInformation;
-	
-	private Schedule schedule;
-	
-	public ImportSubjects(Schedule schedule)
+	public ImportSubjects()
 	{
-		this.subjectList = new ArrayList<Subject>();
-		this.schedule = schedule;
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -27,8 +24,9 @@ public class ImportSubjects {
 	        if (fileEntry.isDirectory()) {
 	            listFilesForFolder(fileEntry);
 	        } else {
+	        	this.className = fileEntry.getName().split("\\.")[0];
 	            this.readFiles(fileEntry.getAbsolutePath());
-	            this.schedule.create(fileEntry.getName().split("\\.")[0], this.subjectList);
+	            //fileEntry.delete();
 	        }
 	    }
 	}
@@ -45,8 +43,9 @@ public class ImportSubjects {
         String line = "";
         String cvsSplitBy = ",";
         ArrayList<String> subjectList = new ArrayList<String>();
+        Session ss = SessionUtil.session();
         try {
-
+        	ss.beginTransaction();
             br = new BufferedReader(new InputStreamReader(
                     new FileInputStream(fileName), "UTF-8"));
             while ((line = br.readLine()) != null) {
@@ -55,14 +54,13 @@ public class ImportSubjects {
                 String[] data = line.split(cvsSplitBy);
                 String subjectId = data[1];
                 String subjectName = data[2];
-                Room room = new Room(data[3]);
-                this.subjectInformation = new Subject(subjectId, subjectName, room);
-                this.subjectList.add(this.subjectInformation);
+                String room = data[3];
+                ss.save(new Subject(subjectId, subjectName, room));                    
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            ss.getTransaction().commit();
+        } catch (Exception e) {
+        	System.out.println(e.getMessage());
+        	ss.getTransaction().rollback();
         } finally {
             if (br != null) {
                 try {

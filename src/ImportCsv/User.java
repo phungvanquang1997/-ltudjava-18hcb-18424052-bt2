@@ -17,6 +17,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+
 @Entity
 @Table(name="User")
 public class User {
@@ -74,27 +77,19 @@ public class User {
 	
 	public void changePassword(User clientUser, String newPassword)
 	{
-		for(User user : userList) {
-			if(user.getUserName().equals(clientUser.getUserName()) && 
-					user.getPassWord().equals(clientUser.getPassWord())) {
-				this.setPassWord(newPassword);
-				userList.remove(user);
-				userList.add(new User(getUserName(), getPassWord()));
-				isChangedPassword = 1;
-				break;
-			}
+		Session ss = SessionUtil.session();
+		String hql = "UPDATE from User set password=:password where username=:username";
+		try {
+			ss.beginTransaction();
+			Query query = ss.createQuery(hql);
+			query.setParameter("username", clientUser.userName);
+			query.setParameter("password", newPassword);
+			int rs = query.executeUpdate();
+			System.out.println(rs);
+			ss.getTransaction().commit();
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			ss.getTransaction().rollback();
 		}
-	}
-	
-	public static void saveUsers() throws Exception {
-		String fileName = "upload/users/users.txt";
-        BufferedReader br = null;
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false));
-        writer.flush();
-        for(User user : userList) {
-        	writer.write(user.getUserName() + " " + user.getPassWord());
-        	writer.newLine();
-        }
-        writer.close();
 	}
 }

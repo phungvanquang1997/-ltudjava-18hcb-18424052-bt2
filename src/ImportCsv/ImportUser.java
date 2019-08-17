@@ -26,7 +26,7 @@ public class ImportUser {
             session.beginTransaction();
             while ((line = br.readLine()) != null) {
             	subjectList.add(line);
-            	String[] data = line.split(splitBy);
+            	String[] data = line.split(splitBy);	
             	String userName = data[0];
             	String passWord = data[1];
             	session.save(new User(userName, passWord, userName.equals("giaovu") ? 1 : 0));

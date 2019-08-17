@@ -8,18 +8,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.hibernate.Session;
+
 public class ImportPoints {
+	private String className;
 	
-	private ArrayList<Student> pointList;
-	
-	private Point pointInformation;
-	
-	private PointManagement pointManagement;
-	
-	public ImportPoints(PointManagement pointManagement)
+	public ImportPoints()
 	{
-		this.pointList = new ArrayList();
-		this.pointManagement = pointManagement;
+		
 	}
 	
 
@@ -29,9 +25,9 @@ public class ImportPoints {
 	        if (fileEntry.isDirectory()) {
 	            listFilesForFolder(fileEntry);
 	        } else {
+	        	this.className = fileEntry.getName().split("\\.")[0];
 	            this.readFiles(fileEntry.getAbsolutePath());
-	            this.pointManagement.create(fileEntry.getName().split("\\.")[0], this.pointList);
-	            fileEntry.delete();
+	            //fileEntry.delete();
 	        }
 	    }
 	}
@@ -48,8 +44,9 @@ public class ImportPoints {
         String line = "";
         String cvsSplitBy = ",";
         ArrayList<String> subjectList = new ArrayList<String>();
+        Session ss = SessionUtil.session();
         try {
-
+        	ss.beginTransaction();
             br = new BufferedReader(new InputStreamReader(
                     new FileInputStream(fileName), "UTF-8"));
             while ((line = br.readLine()) != null) {
@@ -62,21 +59,14 @@ public class ImportPoints {
                 float middlePoint = Float.parseFloat(data[3]);
                 float finalPoint = Float.parseFloat(data[4]);
                 float otherPoint = Float.parseFloat(data[5]);
-                float sumPoint = Float.parseFloat(data[6]);
-                
-                this.pointInformation = new Point(middlePoint, finalPoint, otherPoint, sumPoint);
-                Student student = new Student();
-                student.setMSSV(MSSV);
-                student.setName(name);
-                student.setPoint(this.pointInformation);
-                
-                this.pointList.add(student);
+                float sumPoint = Float.parseFloat(data[6]);                
+                ss.save(new Point(MSSV,this.className,middlePoint, finalPoint, otherPoint, sumPoint));
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+            ss.getTransaction().commit();
+        } catch(Exception e) {
+			System.out.println(e.getMessage());
+			ss.getTransaction().rollback();
+		} finally {
             if (br != null) {
                 try {
                     br.close();

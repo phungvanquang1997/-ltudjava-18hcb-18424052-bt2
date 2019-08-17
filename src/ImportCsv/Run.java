@@ -175,9 +175,9 @@ public class Run {
 	}
 	
 	public static void main(String[] args)  {
-		ImportUser imp = new ImportUser();
+		ImportPoints imp = new ImportPoints();
 		try {
-			imp.importUser();
+			imp.process();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

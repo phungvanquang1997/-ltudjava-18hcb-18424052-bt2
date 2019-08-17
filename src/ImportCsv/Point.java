@@ -3,6 +3,8 @@ package ImportCsv;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -11,6 +13,7 @@ import javax.persistence.Table;
 public class Point {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
 	public int id;
 	
@@ -23,6 +26,25 @@ public class Point {
 	@Column(name="other")
 	public float otherPoint;
 	
+	@Column(name="MSSV")
+	public String MSSV;
+	
+	@Column(name="class_name")
+	public String className;
+	
+	@Column(name="sum")
+	public float sumPoint;
+	
+	public Point(String mSSV, String className, float middlePoint, float finalPoint, float otherPoint, float sumPoint) {
+		super();
+		MSSV = mSSV;
+		this.className = className;
+		this.middlePoint = middlePoint;
+		this.finalPoint = finalPoint;
+		this.otherPoint = otherPoint;
+		this.sumPoint = sumPoint;
+	}
+
 	public float getMiddlePoint() {
 		return middlePoint;
 	}
@@ -55,8 +77,6 @@ public class Point {
 		this.sumPoint = sumPoint;
 	}
 
-	public float sumPoint;
-	
 	public Point(float middlePoint, float finalPoint, float otherPoint, float sumPoint) {
 		this.middlePoint = middlePoint;
 		this.finalPoint = finalPoint;
