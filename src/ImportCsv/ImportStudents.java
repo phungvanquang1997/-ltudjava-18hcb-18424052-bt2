@@ -34,8 +34,8 @@ public class ImportStudents {
 	        if (fileEntry.isDirectory()) {
 	            listFilesForFolder(fileEntry);
 	        } else {
-	            this.readFiles(fileEntry.getAbsolutePath());
-	            this.className = fileEntry.getName().split("\\.")[0];
+	        	this.className = fileEntry.getName().split("\\.")[0];
+	            this.readFiles(fileEntry.getAbsolutePath());	         
 	            //this.classes.createClass(fileEntry.getName().split("\\.")[0], this.studentList);	        
 	            fileEntry.delete();
 	        }
@@ -55,27 +55,26 @@ public class ImportStudents {
         String cvsSplitBy = ",";
         ArrayList<String> studentList = new ArrayList<String>();
         Session session = SessionUtil.session();
-        session.beginTransaction();
         try {
-
-            br = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(fileName), "UTF-8"));
-            while ((line = br.readLine()) != null) {
-            	studentList.add(line);
-                // use comma as separator
-                String[] data = line.split(cvsSplitBy);
-                String name = data[1];
-                String MSSV = data[2];
-                String gender = data[3];
-                String CMND = data[4];        
-                Student student = new Student(name, MSSV, gender, CMND, this.className);
-                session.save(student);
-                session.getTransaction().commit();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        	try {
+	            br = new BufferedReader(new InputStreamReader(
+	                    new FileInputStream(fileName), "UTF-8"));
+	            session.beginTransaction();
+	            while ((line = br.readLine()) != null) {            
+	            	studentList.add(line);
+	                // use comma as separator
+	                String[] data = line.split(cvsSplitBy);
+	                String name = data[1];
+	                String MSSV = data[2];
+	                String gender = data[3];
+	                String CMND = data[4];        
+	                Student student = new Student(name, MSSV, gender, CMND, this.className);
+	                session.save(student);              	                 
+	            }
+	            session.getTransaction().commit();     
+        	} catch (Exception e) {
+        		session.getTransaction().rollback();
+        	}
         } finally {
             if (br != null) {
                 try {
@@ -85,7 +84,7 @@ public class ImportStudents {
                 }
             }
         }
-        session.getTransaction().rollback();
+        
 	}
 	
 	public void process() throws IOException 
