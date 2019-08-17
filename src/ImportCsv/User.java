@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,6 +22,7 @@ import javax.persistence.Table;
 public class User {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
 	public int id;
 	
@@ -39,6 +42,7 @@ public class User {
 	public User(String newUserName, String newPassWord, int Role) {
 		this.userName = newUserName;
 		this.passWord = newPassWord;
+		this.Role = Role;
 	}
 	
 	public String getUserName() {

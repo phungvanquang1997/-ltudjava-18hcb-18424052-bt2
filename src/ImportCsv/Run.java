@@ -175,10 +175,10 @@ public class Run {
 	}
 	
 	public static void main(String[] args)  {
-		ImportStudents imp = new ImportStudents();
+		ImportUser imp = new ImportUser();
 		try {
-			imp.process();
-		} catch (IOException e) {
+			imp.importUser();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
