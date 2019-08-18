@@ -29,7 +29,7 @@ public class Student {
 	@Column(name="CMND")
 	public String CMND;
 	
-	@Column(name="gradeId")
+	@Column(name="grade_name")
 	public String gradeId;
 	
 	public Student() {
@@ -77,4 +77,5 @@ public class Student {
 	{ 
 		return this.name;
 	}
+	
 }

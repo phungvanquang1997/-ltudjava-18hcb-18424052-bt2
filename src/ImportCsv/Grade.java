@@ -52,34 +52,22 @@ public class Grade {
 	public List findStudentsInClasses(String className)
 	{
 		Session session = SessionUtil.session();
-		String hql = "FROM Grade g , Student s WHERE s.gradeId = g.classId and g.className = :name";
-		session.beginTransaction();
-		Query query = session.createQuery(hql);
-		query.setParameter("name", "18HCB");
-		List l = query.list();
-		Object[] row = (Object[]) l.get(0);
-		Student g = (Student)row[1];
-		System.out.println(g.CMND);
-		session.getTransaction().commit();
-		return l;
+		try {
+			String hql = "FROM Grade g , Student s WHERE s.gradeId = g.className and g.className = :name";
+			session.beginTransaction();
+			Query query = session.createQuery(hql);
+			query.setParameter("name", "18HCB");
+			List l = query.list();
+			Object[] row = (Object[]) l.get(0);
+			Student g = (Student)row[1];
+			session.getTransaction().commit();
+			return l;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			session.getTransaction().rollback();
+		}
+		return new ArrayList();
 	}
 	
-	public void writeFiles() throws IOException
-	{
-		String folderName = "upload/students";
-		int i = 1;
-		for(Map.Entry<String, ArrayList<Student>> studentInclass : this.classes.entrySet()) {
-		    String key = studentInclass.getKey();
-		    ArrayList<Student> value = studentInclass.getValue(); 
-	        BufferedWriter writer = new BufferedWriter(new FileWriter(folderName + "/" + key + ".csv", false));
-	        writer.flush();
-		    for (Student student: value) {
-		    	writer.write(i + "," + student.MSSV + "," + student.name + "," + student.gender + "," + student.CMND);
-		    	writer.newLine();
-		    	i++;
-		    }
-		    writer.close();   
-		}
-	}
 }
 

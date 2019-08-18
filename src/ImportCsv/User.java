@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -91,5 +92,26 @@ public class User {
 			System.out.println(e.getMessage());
 			ss.getTransaction().rollback();
 		}
+	}
+	
+	public boolean findUser(String username, String password)
+	{
+		Session ss = SessionUtil.session();
+		try {
+			ss.beginTransaction();
+			String hql = "select * from User where username=:username and password=:passowrd";
+			Query query = ss.createQuery(hql);
+			query.setParameter("username", username);
+			query.setParameter("password", password);
+			List<User> l = query.list();
+			if (l.size() > 0) {
+				return false;
+			}
+			ss.getTransaction().commit();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			ss.getTransaction().rollback();
+		}
+		return false;
 	}
 }

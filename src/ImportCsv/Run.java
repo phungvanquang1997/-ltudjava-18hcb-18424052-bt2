@@ -22,17 +22,19 @@ public class Run {
 	
 	public static void login()
 	{
+		boolean isLogged = false;
 		do {
-		Scanner inp = new Scanner(System.in);
-		String userName, passWord;
-		System.out.println("==================================================");
-		System.out.println("\t\t Đăng nhập hệ thống");
-		System.out.print("\t Tên đăng nhập: ");
-		userName = inp.nextLine();
-	    System.out.print("\t Mật khẩu : "); 
-	    passWord = inp.nextLine();  
-	    clientUser = new User(userName, passWord);
-		} while (!clientUser.hasLogged(clientUser));
+			Scanner inp = new Scanner(System.in);
+			String userName, passWord;
+			System.out.println("==================================================");
+			System.out.println("\t\t Đăng nhập hệ thống");
+			System.out.print("\t Tên đăng nhập: ");
+			userName = inp.nextLine();
+		    System.out.print("\t Mật khẩu : "); 
+		    passWord = inp.nextLine();  
+		    clientUser = new User(userName, passWord, userName.equals("giaovu") ? 1 : 0);
+		    isLogged = clientUser.findUser(userName, passWord);
+		} while (!isLogged);
 	}
 	
 	public static void menu() throws Exception
@@ -66,19 +68,19 @@ public class Run {
 			switch(choice) {
 				case 1:
 				{
-					ImportStudents importCsv = new ImportStudents(classes);
+					ImportStudents importCsv = new ImportStudents();
 			    	importCsv.process();
 			    	break;
 				}
 				case 2:
 				{
-					ImportSubjects importSubject = new ImportSubjects(schedule);
+					ImportSubjects importSubject = new ImportSubjects();
 					importSubject.process();
 					break;
 				}
 				case 3:
 				{
-					ImportPoints importPoints = new ImportPoints(pointManagement);
+					ImportPoints importPoints = new ImportPoints();
 					importPoints.process();
 					break;
 				}
@@ -88,7 +90,13 @@ public class Run {
 					String className;
 					System.out.println("Nhập tên lớp muốn xem: "); 
 					className = sc.nextLine();
-					classes.showStudentListByClassName(className);
+					List l = classes.findStudentsInClasses(className);
+					System.out.println("Thông tin lớp " + className);
+					System.out.println("STT\t| Hoten \t| MSSV \t| gender \t| CMND \t");
+					for(int i = 0; i < l.size()-1 ; i++) {
+						Student st = (Student) l.get(i);						
+						System.out.println((i+1) + "\t" + st.getName() + "\t" + st.getMSSV() + "\t" + st.getGender() + "\t" + st.getCMND());
+					}					
 					break;
 				}
 				case 5:
@@ -150,7 +158,17 @@ public class Run {
 			        CMND = sc.nextLine();
 			        System.out.println("Class name: ");
 			        studentClass = sc.nextLine();
-			        classes.addStudent(new Student(name, MSSV, gender, CMND), studentClass);
+			        Session ss = SessionUtil.session(); 
+			        try {
+			        	 ss.beginTransaction();
+			        	 ss.save(new Student(name, MSSV, gender, CMND, studentClass));
+			        	 ss.getTransaction().commit();
+			        	 System.out.println("Added student is successful!");
+			        } catch (Exception e) {
+			        	System.out.println(e.getMessage());
+			        	ss.getTransaction().rollback();
+			        }
+			        
 			        break;
 				}
 				case 9:
@@ -175,13 +193,12 @@ public class Run {
 	}
 	
 	public static void main(String[] args)  {
-		ImportPoints imp = new ImportPoints();
-		try {
-			imp.process();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Grade g = new Grade();
+		g.findStudentsInClasses("18HCB");
+		/*
+		 * ImportPoints imp = new ImportPoints(); try { imp.process(); } catch
+		 * (Exception e) { // TODO Auto-generated catch block e.printStackTrace(); }
+		 */
 		//menu();
 	}
 

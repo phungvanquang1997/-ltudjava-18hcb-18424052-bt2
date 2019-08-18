@@ -55,7 +55,7 @@ public class ImportSubjects {
                 String subjectId = data[1];
                 String subjectName = data[2];
                 String room = data[3];
-                ss.save(new Subject(subjectId, subjectName, room));                    
+                ss.save(new Subject(subjectId, subjectName, room, this.className));                    
             }
             ss.getTransaction().commit();
         } catch (Exception e) {

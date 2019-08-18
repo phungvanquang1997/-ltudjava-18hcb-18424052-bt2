@@ -80,29 +80,6 @@ public class PointManagement {
 		return point.isPassed();
 	}
 	
-	public void writeFiles() throws IOException
-	{
-		String folderName = "upload/points";
-		int i = 1;
-		for(Map.Entry<String, ArrayList<Student>> studentInclass : this.students.entrySet()) {
-		    String key = studentInclass.getKey();
-		    ArrayList<Student> value = studentInclass.getValue(); 
-	        BufferedWriter writer = new BufferedWriter(new FileWriter(folderName + "/" + key + ".csv", false));
-	        writer.flush();
-		    for (Student student: value) {
-		    	writer.write(i + "," + student.MSSV + "," + student.name + "," 
-		    			+ student.getPoint().middlePoint + ","
-		    			+ student.getPoint().finalPoint + ","
-		    			+ student.getPoint().otherPoint + ","
-		    			+ student.getPoint().sumPoint);
-		    	writer.newLine();
-		    	i++;
-		    }
-		    writer.close();   
-		    
-		}
-	}
-	
 	public void updatePointsByStudentId(String gradeName,String MSSV, Point point)
 	{
 		ArrayList<Student> students = this.students.get(gradeName);
