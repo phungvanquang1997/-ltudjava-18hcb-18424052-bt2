@@ -35,6 +35,8 @@ public class Point {
 	@Column(name="sum")
 	public float sumPoint;
 	
+	public Point() {}
+	
 	public Point(String mSSV, String className, float middlePoint, float finalPoint, float otherPoint, float sumPoint) {
 		super();
 		MSSV = mSSV;
@@ -82,11 +84,5 @@ public class Point {
 		this.finalPoint = finalPoint;
 		this.otherPoint = otherPoint;
 		this.sumPoint = sumPoint;
-	}
-	
-	public boolean isPassed()
-	{
-		return this.sumPoint >= 5;
-	}
-	
+	}	
 }

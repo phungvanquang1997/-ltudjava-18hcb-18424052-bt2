@@ -29,7 +29,7 @@ public class ImportUser {
             	String[] data = line.split(splitBy);	
             	String userName = data[0];
             	String passWord = data[1];
-            	session.save(new User(userName, passWord, userName.equals("giaovu") ? 1 : 0));
+            	session.saveOrUpdate(new User(userName, passWord, userName.equals("giaovu") ? 1 : 0));
             	hasRead = '1';
             }
             if(hasRead == '1') {
@@ -37,7 +37,7 @@ public class ImportUser {
             } else {
             	System.out.println("Imported users file is failure !");
             }
-            session.getTransaction().commit();
+            session.getTransaction().commit();         
         } catch (Exception e) {
         	session.getTransaction().rollback();
         } finally {
@@ -49,5 +49,6 @@ public class ImportUser {
                 }
             }
         }
+        session.close();
 	}
 }

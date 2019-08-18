@@ -91,12 +91,15 @@ public class Run {
 					System.out.println("Nhập tên lớp muốn xem: "); 
 					className = sc.nextLine();
 					List l = classes.findStudentsInClasses(className);
-					System.out.println("Thông tin lớp " + className);
-					System.out.println("STT\t| Hoten \t| MSSV \t| gender \t| CMND \t");
-					for(int i = 0; i < l.size()-1 ; i++) {
-						Student st = (Student) l.get(i);						
-						System.out.println((i+1) + "\t" + st.getName() + "\t" + st.getMSSV() + "\t" + st.getGender() + "\t" + st.getCMND());
-					}					
+					if (l != null) {
+						System.out.println("Thông tin lớp " + className);
+						System.out.println("STT\t| Hoten \t| MSSV \t| gender \t| CMND \t");
+						for(int i = 0; i <= l.size()-1 ; i++) {
+							Object[] row = (Object[]) l.get(i);
+							Student st = (Student) row[1];						
+							System.out.println((i+1) + "\t" + st.getName() + "\t" + st.getMSSV() + "\t" + st.getGender() + "\t" + st.getCMND());
+						}					
+					} 
 					break;
 				}
 				case 5:
@@ -114,7 +117,7 @@ public class Run {
 					String className;
 					System.out.println("Nhập tên lớp muốn xem: "); 
 					className = sc.nextLine();
-					if(clientUser.Role.isAccessable() == 1) {
+					if(clientUser.Role == 1) {
 						pointManagement.showPointOfStudentByClassName(className);
 					} else {
 						pointManagement.showPointOfStudentByClassName(className, true);
@@ -182,9 +185,6 @@ public class Run {
 					break;
 				}
 				case 0:
-					clientUser.saveUsers();
-					classes.writeFiles();
-					pointManagement.writeFiles();
 					System.exit(0);
 				default:
 					break;
@@ -192,14 +192,8 @@ public class Run {
 	    }while(choice != 0);
 	}
 	
-	public static void main(String[] args)  {
-		Grade g = new Grade();
-		g.findStudentsInClasses("18HCB");
-		/*
-		 * ImportPoints imp = new ImportPoints(); try { imp.process(); } catch
-		 * (Exception e) { // TODO Auto-generated catch block e.printStackTrace(); }
-		 */
-		//menu();
+	public static void main(String[] args) throws Exception  {
+		Run.menu();
 	}
 
 }

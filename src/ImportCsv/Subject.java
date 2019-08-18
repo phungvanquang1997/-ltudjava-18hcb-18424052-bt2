@@ -22,6 +22,8 @@ public class Subject {
 	@Column(name="grade_name")
 	public String className;
 	
+	public Subject() {}
+	
 	public String getSubjectId() {
 		return subjectId;
 	}

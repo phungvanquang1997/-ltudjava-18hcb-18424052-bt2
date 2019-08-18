@@ -46,6 +46,11 @@ public class ImportStudents {
 	{
 		File folder = new File("upload/students");
 		this.listFilesForFolder(folder);
+		Session ss = SessionUtil.session();
+		ss.beginTransaction();
+		Grade grade = new Grade(this.className);
+       	ss.save(grade);
+        ss.getTransaction().commit();
 	}
 	
 	public void readFiles(String fileName) 
@@ -69,12 +74,11 @@ public class ImportStudents {
 	                String gender = data[3];
 	                String CMND = data[4];        
 	                Student student = new Student(name, MSSV, gender, CMND, this.className);
-	                session.save(student);              	   
-	                Grade grade = new Grade(this.className);
-	                session.save(grade);
+	                session.save(student);              	   	             
 	            }
 	            session.getTransaction().commit();     
         	} catch (Exception e) {
+        		System.out.println(e.getMessage());
         		session.getTransaction().rollback();
         	}
         } finally {

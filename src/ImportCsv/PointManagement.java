@@ -5,12 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+
 public class PointManagement {
-	public ArrayList<Student> studentPointList;
-	
-	private HashMap<String, ArrayList<Student>> students = new HashMap<String, ArrayList<Student>>();
 	
 	private int passedQuantity = 0;
 	
@@ -18,80 +19,103 @@ public class PointManagement {
 	
 	public void showPointOfStudentByClassName(String className) 
 	{
-		ArrayList<Student> studentPointList = this.students.get(className);
-		System.out.println("Thông tin điểm lớp " + className);
-		System.out.println("STT\tMSSV\tHọ tên\t\tĐiểm GK\t\tĐiểm CK\t\tĐiểm khác\t\tĐiểm tổng\t\tĐậu(x)");
-		int i = 1;
+		Session ss = SessionUtil.session();
 		try {
-			for(Student student : studentPointList)
-			{
-				System.out.println(i + "\t" + 
-						student.MSSV + "\t" + 
-						student.name + "\t\t" + 
-						student.getPoint().getMiddlePoint() + "\t\t" + 
-						student.getPoint().getFinalPoint() + "\t\t" + 
-						student.getPoint().getOtherPoint() + "\t\t" + 
-						student.getPoint().getSumPoint() + "\t\t" +
-						(this.isPassed(student.getPoint()) == true ? "X" : ""));
-				i++;
+			ss.beginTransaction();
+			String hql = "from Point p, Student st where st.MSSV = p.MSSV and p.className = :className";
+			Query query = ss.createQuery(hql);
+			query.setParameter("className", className);
+			List l = query.list();
+			if(l.size() > 0) {
+				System.out.println("Thông tin điểm lớp " + className);
+				System.out.println("STT\tMSSV\tHọ tên\t\tĐiểm GK\t\tĐiểm CK\t\tĐiểm khác\t\tĐiểm tổng\t\tĐậu(x)");
+				for(int i = 0; i <= l.size()-1 ; i++) {
+					Object[] row = (Object[]) l.get(i);
+					Student student = (Student)row[1];
+					Point p = (Point) row[0];
+					
+					if(p.getSumPoint() >= 5) this.passedQuantity++;
+					else this.failedQuantity++;
+					
+					System.out.println((i+1) + "\t" + 
+							student.MSSV + "\t" + 
+							student.name + "\t\t" + 
+							p.getMiddlePoint() + "\t\t" + 
+							p.getFinalPoint() + "\t\t" + 
+							p.getOtherPoint() + "\t\t" + 
+							p.getSumPoint() + "\t\t" +
+							(p.getSumPoint() >= 5 ? "X" : ""));
+				}
+				System.out.println("Số lượng đậu: " + this.passedQuantity + ", rớt: " + this.failedQuantity);
+				ss.getTransaction().commit();
+			} else {
+				System.out.println("Bạn không có tên trong lớp " + className);
 			}
-			System.out.println("Số lượng đậu: " + this.passedQuantity + ", rớt: " + this.failedQuantity);
-		} catch(Exception e) {
-			System.out.println("Danh sách điểm lớp" + className + " không tồn tại");
+		} catch (Exception e) {
+			ss.getTransaction().rollback();
+			System.out.println(e.getMessage());		
 		}	
 	}
 	
 	public void showPointOfStudentByClassName(String className, boolean isStudent)
 	{
-		ArrayList<Student> studentPointList = this.students.get(className);
+		Session ss = SessionUtil.session();
 		try {
-			System.out.println("MSSV\tHọ tên\t\tĐiểm GK\t\tĐiểm CK\t\tĐiểm khác\t\tĐiểm tổng\t\tĐậu(x)");
-			for(Student student : studentPointList)
-			{
-				if (isStudent && student.MSSV.equals(Run.clientUser.getUserName())) {
-					System.out.println(student.MSSV + "\t" + 
+			ss.beginTransaction();
+			String hql = "from Point p, Student st where st.MSSV = p.MSSV and p.className = :className and st.MSSV=:name";
+			Query query = ss.createQuery(hql);
+			query.setParameter("className", className);
+			query.setParameter("name", Run.clientUser.getUserName());
+			List l = query.list();
+			if (l.size() > 0) {
+				System.out.println("Thông tin điểm lớp " + className);
+				System.out.println("STT\tMSSV\tHọ tên\t\tĐiểm GK\t\tĐiểm CK\t\tĐiểm khác\t\tĐiểm tổng\t\tĐậu(x)");
+				for(int i = 0; i <= l.size()-1 ; i++) {
+					Object[] row = (Object[]) l.get(i);
+					Student student = (Student)row[1];
+					Point p = (Point) row[0];
+					
+					if(p.getSumPoint() >= 5) this.passedQuantity++;
+					else this.failedQuantity++;
+					
+					System.out.println((i+1) + "\t" + 
+							student.MSSV + "\t" + 
 							student.name + "\t\t" + 
-							student.getPoint().getMiddlePoint() + "\t\t" + 
-							student.getPoint().getFinalPoint() + "\t\t" + 
-							student.getPoint().getOtherPoint() + "\t\t" + 
-							student.getPoint().getSumPoint() + "\t\t" +
-							(this.isPassed(student.getPoint()) == true ? "X" : ""));
-					break;
+							p.getMiddlePoint() + "\t\t" + 
+							p.getFinalPoint() + "\t\t" + 
+							p.getOtherPoint() + "\t\t" + 
+							p.getSumPoint() + "\t\t" +
+							(p.getSumPoint() >= 5 ? "X" : ""));
 				}
+				ss.getTransaction().commit();
+			} else {
+				System.out.println("Danh sách điểm lớp " + className + " không tồn tại");
 			}
-		} catch(Exception e) {
-			System.out.println("Điểm lớp " + className + " không tồn tại");
+		} catch (Exception e) {
+			ss.getTransaction().rollback();
+			System.out.println(e.getMessage());
 		}	
-	}
-	
-	public void create(String gradeName, ArrayList<Student> studentPointList)
-	{
-		this.studentPointList = studentPointList;
-		this.students.put(gradeName, studentPointList);
-	}
-	
-	public boolean isPassed(Point point)
-	{ 
-		if (point.isPassed()) {
-			this.passedQuantity++;
-		} else {
-			this.failedQuantity++;
-		}
-		return point.isPassed();
 	}
 	
 	public void updatePointsByStudentId(String gradeName,String MSSV, Point point)
 	{
-		ArrayList<Student> students = this.students.get(gradeName);
+		Session ss = SessionUtil.session();
 		try {
-			for(Student student: students)
-			{
-				if(student.MSSV.equals(MSSV)) {
-					student.setPoint(point);
-				}
-			}
+			ss.beginTransaction();
+			String hql = "update Point set middlePoint = :middle, otherPoint = :other, finalPoint = :final, sumPoint = :sum where className = :className and MSSV =:MSSV";
+			Query query = ss.createQuery(hql);
+			query.setParameter("middle", point.middlePoint);
+			query.setParameter("other", point.otherPoint);
+			query.setParameter("final", point.finalPoint);
+			query.setParameter("sum", point.sumPoint);
+			query.setParameter("className", gradeName);
+			query.setParameter("MSSV", MSSV);
+			int rs = query.executeUpdate();
+			ss.getTransaction().commit();
 		} catch (Exception e) {
-			System.out.println("Không tồn tại lớp học " + gradeName);
-		}
+			ss.getTransaction().rollback();
+			System.out.println(e.getMessage());
+			System.out.println("Không tồn tại lớp " + gradeName);
+		}	
 	}
 }

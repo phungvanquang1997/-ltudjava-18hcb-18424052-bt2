@@ -8,15 +8,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 public class Schedule<T> {
-	public ArrayList<Subject> subjectList;
-	
-	private HashMap<String, ArrayList<Subject>> schedule = new HashMap<String, ArrayList<Subject>>();
-	
-	public void create(String gradeName, ArrayList<Subject> subjectList)
-	{
-		this.subjectList = subjectList;
-		schedule.put(gradeName, subjectList);
-	}
 	
 	public void showScheduleByGradeName(String gradeName) {
 		Session ss = SessionUtil.session();
@@ -34,7 +25,7 @@ public class Schedule<T> {
 		}
 		System.out.println("| STT " + "|" + " Mã môn " + "|" + " Tên môn " + "|" + " Phòng học |");
 		try {
-			for(int i = 0; i < l.size()-1 ; i++) {
+			for(int i = 0; i <= l.size()-1 ; i++) {
 				Subject st = l.get(i);						
 				System.out.println((i+1) + "\t" + st.getSubjectId() + "\t" + st.getSubjectName() + "\t" + st.getRoom());
 			}		

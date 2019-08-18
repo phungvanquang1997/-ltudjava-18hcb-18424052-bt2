@@ -51,13 +51,22 @@ public class Grade {
 	
 	public List findStudentsInClasses(String className)
 	{
+		List l = null;
 		Session session = SessionUtil.session();
+		session.beginTransaction();
+		String sql = "FROM Grade where name=:className";
+		Query q = session.createQuery(sql);
+		q.setParameter("className", className);
+
+		if (q.list().size() == 0) {
+			System.out.println("Lớp học " + className + " không tồn tại!");
+			return l;
+		}		
 		try {
-			String hql = "FROM Grade g , Student s WHERE s.gradeId = g.className and g.className = :name";
-			session.beginTransaction();
+			String hql = "FROM Grade g , Student s WHERE s.gradeId = g.className and g.className = :name";			
 			Query query = session.createQuery(hql);
-			query.setParameter("name", "18HCB");
-			List l = query.list();
+			query.setParameter("name", className);
+			l = query.list();
 			Object[] row = (Object[]) l.get(0);
 			Student g = (Student)row[1];
 			session.getTransaction().commit();
@@ -66,7 +75,7 @@ public class Grade {
 			System.out.println(e.getMessage());
 			session.getTransaction().rollback();
 		}
-		return new ArrayList();
+		return l;
 	}
 	
 }

@@ -99,13 +99,13 @@ public class User {
 		Session ss = SessionUtil.session();
 		try {
 			ss.beginTransaction();
-			String hql = "select * from User where username=:username and password=:passowrd";
+			String hql = "from User where userName=:username and passWord=:password";
 			Query query = ss.createQuery(hql);
 			query.setParameter("username", username);
 			query.setParameter("password", password);
 			List<User> l = query.list();
 			if (l.size() > 0) {
-				return false;
+				return true;
 			}
 			ss.getTransaction().commit();
 		} catch (Exception e) {
