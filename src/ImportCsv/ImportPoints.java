@@ -27,7 +27,7 @@ public class ImportPoints {
 	        } else {
 	        	this.className = fileEntry.getName().split("\\.")[0];
 	            this.readFiles(fileEntry.getAbsolutePath());
-	            //fileEntry.delete();
+	            fileEntry.delete();
 	        }
 	    }
 	}

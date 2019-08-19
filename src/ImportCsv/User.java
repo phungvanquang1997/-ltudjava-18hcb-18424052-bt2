@@ -79,7 +79,7 @@ public class User {
 	public void changePassword(User clientUser, String newPassword)
 	{
 		Session ss = SessionUtil.session();
-		String hql = "UPDATE from User set password=:password where username=:username";
+		String hql = "UPDATE from User set passWord=:password where userName=:username";
 		try {
 			ss.beginTransaction();
 			Query query = ss.createQuery(hql);

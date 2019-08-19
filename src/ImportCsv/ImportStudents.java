@@ -37,7 +37,7 @@ public class ImportStudents {
 	        	this.className = fileEntry.getName().split("\\.")[0];
 	            this.readFiles(fileEntry.getAbsolutePath());	         
 	            //this.classes.createClass(fileEntry.getName().split("\\.")[0], this.studentList);	        
-	            //fileEntry.delete();
+	            fileEntry.delete();
 	        }
 	    }
 	}
